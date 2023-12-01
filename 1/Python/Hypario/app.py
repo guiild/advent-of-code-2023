@@ -1,3 +1,9 @@
+"""
+Author: Fabien Duterte
+Alias: Hypario
+contact: fabienduterte@mailfence.com
+"""
+
 import re
 
 # part 1
