@@ -30,7 +30,7 @@ def word_to_digits(digit):
 total_sum = 0
 with open("calibration document.txt", "r") as file:
     for line in file:
-        digits = re.findall(r'(?:' + '|'.join(word_map.keys()) + '|\d)', line)  # regex -> (?:one|two|three|four|five|six|seven|eight|nine|zero|\d)
+        digits = re.findall(r'(?=(' + '|'.join(word_map.keys()) + '|\d))', line)  # regex -> (?:one|two|three|four|five|six|seven|eight|nine|zero|\d)
         parsed = [word_to_digits(digits[0]), word_to_digits(digits[-1])] if len(digits) > 1 else  [word_to_digits(digits[0]), word_to_digits(digits[0])]  # transform words into digits and filter the digits like in part 1
         
         total_sum += int(''.join(parsed))  # join the digits
