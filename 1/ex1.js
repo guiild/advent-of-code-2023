@@ -1,11 +1,9 @@
 import { input } from './input1.js';
 
-let floor = 0;
-for (let i = 0; i < input.length; i++) {
-    if (input[i] === '(') {
-        floor++;
-    } else {
-        floor--;
-    }
+const toArr = input.split('\n');
+let sum = 0;
+for (let i = 0; i < toArr.length; i++) {
+    const keepOnlyNumbers = toArr[i].replace(/\D/g, '');
+    sum += Number(`${keepOnlyNumbers[0]}${keepOnlyNumbers[keepOnlyNumbers.length - 1]}`);
 }
-console.log(floor);
+console.log(sum);
