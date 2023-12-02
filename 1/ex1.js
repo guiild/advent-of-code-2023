@@ -1,4 +1,4 @@
-import { input } from './input1.js';
+import { input } from './input.js';
 
 const toArr = input.split('\n');
 let sum = 0;
