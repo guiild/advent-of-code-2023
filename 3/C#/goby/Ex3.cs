@@ -6,7 +6,7 @@ namespace Goby_AoC_2023;
 public partial class Ex3
 {
     static Schematic _map;
-    static Dictionary<int, List<int>> gears = new Dictionary<int, List<int>>();
+    static Dictionary<int, List<int>> _gears = new Dictionary<int, List<int>>();
 
     public static int Ex3Resolve(string input)
     {
@@ -29,7 +29,7 @@ public partial class Ex3
 
         Console.WriteLine("");
         int gearRatio = 0;
-        foreach (var gear in gears)
+        foreach (var gear in _gears)
         {
             //Console.WriteLine($"Gear {gear.Key} : {gear.Value.Count} values");
             if (gear.Value.Count == 2)
@@ -85,11 +85,11 @@ public partial class Ex3
                     if (_map.getXY(x, y) == '*')
                     {
                         int gearIndex = x + y * _map.colsNumber;
-                        if (!gears.ContainsKey(gearIndex))
+                        if (!_gears.ContainsKey(gearIndex))
                         {
-                            gears.Add(gearIndex, new List<int>());
+                            _gears.Add(gearIndex, new List<int>());
                         }
-                        gears[gearIndex].Add(Int16.Parse(match.Groups["number"].Value));
+                        _gears[gearIndex].Add(Int16.Parse(match.Groups["number"].Value));
                     }
                 }
             }
