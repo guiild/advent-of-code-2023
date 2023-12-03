@@ -12,8 +12,6 @@ fn solve_puzzle(file_name: &str) -> u128 {
         .lines()
         .map(|line| line.chars().collect::<Vec<char>>())
         .collect::<Vec<Vec<char>>>();
-    // Mutable copy tf the table that we can dynamically modify
-    // let mut table = referential.clone();
     let mut ratios = Vec::new();
     referential.iter().enumerate().for_each(|(i, row)| {
         for (j, c) in row.iter().enumerate() {
@@ -106,7 +104,6 @@ fn check_gear(i: usize, j: usize, table: &Vec<Vec<char>>) -> bool {
     let mut removed: Vec<(usize, usize)> = Vec::new();
 
     for cell in neighbours.iter() {
-        // continue if cell is in removed
         if removed.contains(cell) {
             continue;
         }
