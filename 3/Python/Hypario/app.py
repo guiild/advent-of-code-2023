@@ -1,14 +1,13 @@
 import re
 
 def parse_input(lines: list[str]) -> list[tuple[dict, dict]]:
-    lines = list(lines)
-    numbers = parse_numbers(lines)
-    symbols = parse_symbols(lines)
+    numbers = parse_numbers(lines)  # get all numbers in a {value: value, start: start, row: row, adjacent_locations: []} format
+    symbols = parse_symbols(lines)  # get all symbols in a {(x, y): symbol} format
     
     results = []
     for number in numbers:
-        for location in number["adjacent_locations"] & symbols.keys():
-            results.append((number, {"symbol": symbols[location], "location": location}))
+        for location in number["adjacent_locations"] & symbols.keys():  # filter numbers that have symbols in their adjacent locations
+            results.append((number, {"symbol": symbols[location], "location": location}))  # add them to the list
     return results
 
 def parse_numbers(lines: list[str]) -> list[dict]:
@@ -22,7 +21,7 @@ def parse_numbers(lines: list[str]) -> list[dict]:
                     "start": match.start(),
                     "end": match.end(),
                     "row": row,
-                    "adjacent_locations": {
+                    "adjacent_locations": {  # calculate the adjacent positions for the number at detection time
                         (i, j)
                         for i in range(match.start() - 1, match.end() + 1)
                         for j in range(row - 1, row + 2)
@@ -34,8 +33,8 @@ def parse_numbers(lines: list[str]) -> list[dict]:
 def parse_symbols(lines: list[str]) -> list[dict]:
     symbols = {}
     for row, line in enumerate(lines):
-        for match in re.finditer(r'[^.\d]', line):
-            symbols[(match.start(), row)] = match.group()
+        for match in re.finditer(r'[^.\d]', line):  # parse everything that's not a digit or a dot
+            symbols[(match.start(), row)] = match.group()  # return symbol as a dict, with the position as key, and symbol as value
     return symbols
 
 
@@ -52,6 +51,7 @@ def group_numbers_by_symbol(adjacencies: list[tuple[dict, dict]]):
     groups = {}
     grouped_data = []
     
+    # for each values and their symbol we found, put them in a primitive hashmap
     for item in sorted_data:
         symbol = item[1]['symbol']
         location = item[1]['location']
@@ -61,6 +61,7 @@ def group_numbers_by_symbol(adjacencies: list[tuple[dict, dict]]):
             groups[key] = []
         groups[key].append(item[0])
     
+    # convert the dictionary to a list of tuples (prob can make it a list of tuples without conversion, but it's late...)
     for key, group in groups.items():
         grouped_data.append((key, group))
 
@@ -71,8 +72,8 @@ def main():
     file = open("input.txt", "r")
     lines = [line.rstrip("\n") for line in file.readlines()]
     adjacencies = parse_input(lines)
-    print(sum([number["value"] for number, _ in adjacencies]))
-    print(sum(get_gear_ratios(adjacencies)))
+    print(sum([number["value"] for number, _ in adjacencies]))  # part 1
+    print(sum(get_gear_ratios(adjacencies)))   # part 2
 
 if __name__ == '__main__':
     main()
