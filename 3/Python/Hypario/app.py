@@ -1,3 +1,7 @@
+"""
+based on : https://github.com/janek37/advent-of-code/blob/main/2023/day03.py
+"""
+
 import re
 
 def parse_input(lines: list[str]) -> list[tuple[dict, dict]]:
@@ -20,7 +24,6 @@ def parse_numbers(lines: list[str]) -> list[dict]:
                     "value": value, 
                     "start": match.start(),
                     "end": match.end(),
-                    "row": row,
                     "adjacent_locations": {  # calculate the adjacent positions for the number at detection time
                         (i, j)
                         for i in range(match.start() - 1, match.end() + 1)
@@ -71,6 +74,7 @@ def group_numbers_by_symbol(adjacencies: list[tuple[dict, dict]]):
 def main():
     file = open("input.txt", "r")
     lines = [line.rstrip("\n") for line in file.readlines()]
+    file.close()
     adjacencies = parse_input(lines)
     print(sum([number["value"] for number, _ in adjacencies]))  # part 1
     print(sum(get_gear_ratios(adjacencies)))   # part 2
