@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::VecDeque;
 use std::fs;
 
 fn main() {
@@ -32,59 +32,68 @@ fn solve_puzzle(file_name: &str) -> u128 {
 }
 
 fn compute_gear_ratio(i: usize, j: usize, referential: &Vec<Vec<char>>) -> u128 {
-    // Reconstitute numbers next to the gear
-    let mut table = referential.clone();
-    for (ii, row) in referential.iter().enumerate() {
-        for (jj, _c) in row.iter().enumerate() {
-            if referential[ii][jj].is_ascii_digit() {
-                let mut visited = HashSet::new();
-                if !is_related_to_gear(i, j, ii, jj, referential, &mut visited) {
-                    table[ii][jj] = '.';
-                }
-            }
+    let mut number_cells: Vec<VecDeque<(usize, usize)>> = Vec::new();
+    let numeric_neighbours = get_surrounding_full_cells(i, j, referential)
+        .iter()
+        .filter(|(i, j)| referential[*i][*j].is_ascii_digit())
+        .cloned()
+        .collect::<Vec<(usize, usize)>>();
+
+    for neighbour in numeric_neighbours.iter() {
+        let number_vec = reconstitute_number(neighbour, referential);
+        if !number_cells.contains(&number_vec) {
+            number_cells.push(number_vec);
         }
     }
-    // Convert table to string
-    let str_table = table
+
+    number_cells
         .iter()
-        .map(|row| row.iter().collect::<String>())
-        .collect::<Vec<String>>()
-        .join("")
-        .replace(|c: char| !c.is_ascii_digit(), " ");
-    // Split string by space
-    str_table
-        .split_whitespace()
-        .collect::<Vec<&str>>()
-        .iter()
-        .map(|s| s.parse::<u128>().unwrap())
+        .map(|d| {
+            d.iter()
+                .map(|cell| referential[cell.0][cell.1])
+                .collect::<String>()
+                .parse::<u128>()
+                .unwrap()
+        })
         .product()
 }
 
-fn is_related_to_gear(
-    i: usize,
-    j: usize,
-    ii: usize,
-    jj: usize,
-    referential: &Vec<Vec<char>>,
-    visited: &mut HashSet<(usize, usize)>,
-) -> bool {
-    if get_surrounding_full_cells(i, j, referential).contains(&(ii, jj)) {
-        return true;
-    }
-
-    let neighbours = get_surrounding_full_cells(ii, jj, referential)
-        .iter()
-        .filter(|(i, j)| !visited.contains(&(*i, *j)))
-        .cloned()
-        .collect::<Vec<(usize, usize)>>();
-    for neighbour in neighbours.iter() {
-        visited.insert((ii, jj));
-        if is_related_to_gear(i, j, neighbour.0, neighbour.1, referential, visited) {
-            return true;
+fn reconstitute_number(
+    cell: &(usize, usize),
+    referential: &[Vec<char>],
+) -> VecDeque<(usize, usize)> {
+    let mut number_vec: VecDeque<(usize, usize)> = VecDeque::from([cell.to_owned()]);
+    let mut counter = 0;
+    loop {
+        if cell.1 + counter > referential[0].len() - 1 {
+            break;
+        }
+        let next_right = referential[cell.0][cell.1 + counter];
+        if next_right.is_ascii_digit() {
+            if !number_vec.contains(&(cell.0, cell.1 + counter)) {
+                number_vec.push_back((cell.0, cell.1 + counter));
+            }
+            counter += 1;
+        } else {
+            break;
         }
     }
-
-    false
+    counter = 0;
+    loop {
+        if counter > cell.1 {
+            break;
+        }
+        let next_left = referential[cell.0][cell.1 - counter];
+        if next_left.is_ascii_digit() {
+            if !number_vec.contains(&(cell.0, cell.1 - counter)) {
+                number_vec.push_front((cell.0, cell.1 - counter));
+            }
+            counter += 1;
+        } else {
+            break;
+        }
+    }
+    number_vec
 }
 
 fn check_gear(i: usize, j: usize, table: &Vec<Vec<char>>) -> bool {
