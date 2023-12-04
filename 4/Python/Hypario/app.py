@@ -42,6 +42,7 @@ def parse_input(lines: list[str]) -> list[Card]:
 def main():
     file = open("input.txt", "r")
     lines = file.readlines()
+    file.close()
     cards = parse_input([line.rstrip("\n") for line in lines])
     
     print(sum([int(2 ** (card.number_of_matches() - 1)) for card in cards]))  # part 1
