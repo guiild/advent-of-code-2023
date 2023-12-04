@@ -1,3 +1,9 @@
+"""
+Author: Fabien Duterte
+alias: Hypario
+contact: fabienduterte@mailfence.com
+"""
+
 import re
 
 class Card():
