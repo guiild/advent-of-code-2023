@@ -7,6 +7,7 @@ Contact: fabienduterte@mailfence.com
 import unittest
 import math
 import sympy
+import time as pytime
 
 def parse_input(lines: list[str]):
     times = [int(time) for time in lines[0].split(":")[1].split()]
@@ -87,33 +88,63 @@ def calculate_ways_sympy(time: int, distance: int) -> int:
     first, last = int(solution[0]) + 1, int(solution[1])
     if f(last) == distance: last = last - 1
     
-    return  last - first + 1
+    return  abs(last - first + 1)
 
 def main():
-    file = open("example.txt").read().strip()
+    file = open("input.txt").read().strip()
     times, distances = parse_input(file.split("\n"))
     time, distance = int(''.join(map(str, times))), int(''.join(map(str, distances)))
     
     print("--- naïve search ---")
     print("part 1")
+    start = pytime.perf_counter()
     print(math.prod([calculate_ways_naïve(times[i], distances[i]) for i in range(len(times))]))  # part 1
+    end = pytime.perf_counter()
+    timepart1 = end - start
+    
+    print("naïve search part 1 took : %s" % timepart1)
     
     print("part 2")
+    start = pytime.perf_counter()
     print(calculate_ways_naïve(time, distance))  # part 2
+    end = pytime.perf_counter()
+    timepart2 = end - start
+    
+    print("naïve search part 2 took : %s" % timepart2)
     
     print("--- binary search ---")
     print("part 1")
+    start = pytime.perf_counter()
     print(math.prod([calculate_ways(times[i], distances[i]) for i in range(len(times))])) 
+    end = pytime.perf_counter()
+    timepart1 = end - start
+    
+    print("binary search part 1 took : %s" % timepart1)
     
     print("part 2")
+    start = pytime.perf_counter()
     print(calculate_ways(time, distance))  # part 2
+    end = pytime.perf_counter()
+    timepart2 = end - start
+    
+    print("binary search part 2 took : %s" % timepart2)
     
     print("--- using sympy ---")
     print("part 1")
+    start = pytime.perf_counter()
     print(math.prod([calculate_ways_sympy(times[i], distances[i]) for i in range(len(times))]))
+    end = pytime.perf_counter()
+    timepart1 = end - start
+    
+    print("solving equation part 1 took : %s" % timepart1)
     
     print("part 2")
+    start = pytime.perf_counter()
     print(calculate_ways_sympy(time, distance))
+    end = pytime.perf_counter()
+    timepart2 = end - start
+    
+    print("solving equation part 2 took : %s" % timepart2)
     
 
 if __name__ == "__main__":
