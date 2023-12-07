@@ -11,6 +11,8 @@ def calculate_hand_rank(hand: str, j_joker=False):
     if j_joker and "J" in hand:
         return max(calculate_hand_rank(hand.replace("J", s))
                    for s in DECK if s != "J")
+    # I could have treated each case separately when j_joker,
+    # but KISS (Keep It Simple and Stupid first) worked, and I like recursion 🤷🏽‍♂️
 
     card_count = {}
     for card in hand:
@@ -27,7 +29,6 @@ def calculate_hand_rank(hand: str, j_joker=False):
         return 1
 
 with open("input.txt", "r") as f:
-# with open("input_ex.txt", "r") as f:
     bid_list = []
     hand_part1_list = []
     hand_part2_list = []
@@ -51,8 +52,8 @@ with open("input.txt", "r") as f:
     total = sum(hand_bid_dict[hand] * (i+1) for i, hand in enumerate(hand_sorted))
     print("Total Winnings for part 1:", total)
 
-    # part 1
+    # part 2
     hand_bid_dict = dict(zip(hand_part2_list, bid_list))
-    hand_sorted = sorted(hand_part2_list)
+    hand_sorted = sorted(hand_part2_list)  # lowest to highest
     total = sum(hand_bid_dict[hand] * (i+1) for i, hand in enumerate(hand_sorted))
     print("Total Winnings for part 2:", total)
