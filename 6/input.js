@@ -1,0 +1,2 @@
+export const input = `Time:        54     70     82     75
+Distance:   239   1142   1295   1253`;
