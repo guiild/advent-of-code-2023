@@ -1,0 +1,14 @@
+{
+  "name": "10",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ex1": "node ex1.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "main": "ex1.js",
+  "description": ""
+}
